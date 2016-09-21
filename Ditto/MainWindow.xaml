@@ -1,0 +1,14 @@
+﻿<Window x:Class="Ditto.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ditto"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Button x:Name="startStopBtn" Content="Start" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0, 0, 0, 20" Height ="50" Width="200" Click="startStopBtn_Click"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="20" Margin="119,47,0,0" TextWrapping="NoWrap" Text="TextBox" VerticalAlignment="Top" Width="239"/>
+
+    </Grid>
+</Window>
