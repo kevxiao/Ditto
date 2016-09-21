@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
+using System.IO;
 
 namespace Ditto
 {
@@ -56,9 +57,11 @@ namespace Ditto
             this.fileSync = new BackgroundWorker();
             this.fileSync.DoWork += this.fileSync_DoWork;
             this.fileSync.ProgressChanged += this.fileSync_ProgressChanged;
-            this.fileSync.RunWorkerCompleted += this.fileSync_RunWorkerCompleted;  //Tell the user how the process went
+            this.fileSync.RunWorkerCompleted += this.fileSync_RunWorkerCompleted;
             this.fileSync.WorkerReportsProgress = true;
-            this.fileSync.WorkerSupportsCancellation = true; //Allow for the process to be cancelled
+            this.fileSync.WorkerSupportsCancellation = true;
+
+            fsWatcher.Changed += new FileSystemEventHandler(OnFileChanged);
 
             startStopBtn.Content = startBtnStr;
             this.toExit = false;
@@ -107,32 +110,20 @@ namespace Ditto
 
         private void fileSync_DoWork(object sender, DoWorkEventArgs e)
         {
-            for (int i = 0; i < 100; i++)
-            {
-                Thread.Sleep(1000);
-                this.fileSync.ReportProgress(i);
-
-                //Check if there is a request to cancel the process
-                if (this.fileSync.CancellationPending)
-                {
-                    e.Cancel = true;
-                    this.fileSync.ReportProgress(0);
-                    return;
-                }
-            }
-            //If the process exits the loop, ensure that progress is set to 100%
-            //Remember in the loop we set i < 100 so in theory the process will complete at 99%
-            this.fileSync.ReportProgress(100);
+            // Initialize the file system watcher for detecting file changes
+            this.fsWatcher = new FileSystemWatcher();
+            fsWatcher.EnableRaisingEvents = true;
+            fsWatcher.NotifyFilter = NotifyFilters.LastWrite;
         }
 
         private void fileSync_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            this.textBox.Text = e.ProgressPercentage.ToString();
+            // Report progress to UI
         }
 
         private void fileSync_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            // Clean up worker task
         }
 
         private void exitMenuItem_Click(object sender, EventArgs e)
@@ -142,9 +133,17 @@ namespace Ditto
             this.Close();
         }
 
+        private void OnFileChanged(object source, FileSystemEventArgs e)
+        {
+            // Copy file to other directory
+        }
+
         private BackgroundWorker fileSync;
+        private FileSystemWatcher fsWatcher;
+
         private System.Windows.Forms.ContextMenu trayMenu;
         private System.Windows.Forms.MenuItem exitMenuItem;
+
         private Boolean toExit;     // boolean value used to decide whether to close or just minimize the program
 
         private static String startBtnStr = "Start";
