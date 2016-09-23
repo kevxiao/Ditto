@@ -8,7 +8,8 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <Button x:Name="startStopBtn" Content="Start" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0, 0, 0, 20" Height ="50" Width="200" Click="startStopBtn_Click"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="20" Margin="119,47,0,0" TextWrapping="NoWrap" Text="TextBox" VerticalAlignment="Top" Width="239"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Center" Height="20" Margin="150,50,0,0" TextWrapping="NoWrap" Text="TextBox" VerticalAlignment="Top" Width="239" TextChanged="textBox_TextChanged"/>
+        <Label x:Name="label" Content="" HorizontalAlignment="Center" Margin="0,141,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

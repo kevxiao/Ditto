@@ -61,8 +61,6 @@ namespace Ditto
             this.fileSync.WorkerReportsProgress = true;
             this.fileSync.WorkerSupportsCancellation = true;
 
-            fsWatcher.Changed += new FileSystemEventHandler(OnFileChanged);
-
             startStopBtn.Content = startBtnStr;
             this.toExit = false;
         }
@@ -81,7 +79,7 @@ namespace Ditto
         protected override void OnClosing(CancelEventArgs e)
         {
             // cancel the close event unless toExit is true
-            if (!toExit)
+            if (!this.toExit)
             {
                 e.Cancel = true;
             }
@@ -112,8 +110,19 @@ namespace Ditto
         {
             // Initialize the file system watcher for detecting file changes
             this.fsWatcher = new FileSystemWatcher();
-            fsWatcher.EnableRaisingEvents = true;
-            fsWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            if (Directory.Exists(this.Path))
+            {
+                this.fsWatcher.Path = this.Path;
+            }
+            this.fsWatcher.EnableRaisingEvents = true;
+            this.fsWatcher.NotifyFilter = NotifyFilters.Attributes | NotifyFilters.CreationTime |
+                NotifyFilters.Security | NotifyFilters.Size | NotifyFilters.LastWrite |
+                NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            this.fsWatcher.IncludeSubdirectories = true;
+            this.fsWatcher.Changed += new FileSystemEventHandler(this.OnFileChanged);
+            this.fsWatcher.Created += new FileSystemEventHandler(this.OnFileChanged);
+            this.fsWatcher.Deleted += new FileSystemEventHandler(this.OnFileChanged);
+            this.fsWatcher.Renamed += new RenamedEventHandler(this.OnFileRenamed);
         }
 
         private void fileSync_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -129,13 +138,31 @@ namespace Ditto
         private void exitMenuItem_Click(object sender, EventArgs e)
         {
             // set toExit to true before closing so that the close event is not cancelled
-            toExit = true;
+            this.toExit = true;
             this.Close();
         }
 
         private void OnFileChanged(object source, FileSystemEventArgs e)
         {
             // Copy file to other directory
+            this.Dispatcher.Invoke(() =>
+            {
+                this.label.Content = e.FullPath;
+            });
+        }
+
+        private void OnFileRenamed(object source, RenamedEventArgs e)
+        {
+            // Copy file to other directory
+            this.Dispatcher.Invoke(() =>
+            {
+                this.label.Content = e.FullPath;
+            });
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.Path = textBox.Text;
         }
 
         private BackgroundWorker fileSync;
@@ -145,6 +172,7 @@ namespace Ditto
         private System.Windows.Forms.MenuItem exitMenuItem;
 
         private Boolean toExit;     // boolean value used to decide whether to close or just minimize the program
+        private String Path;
 
         private static String startBtnStr = "Start";
         private static String stopBtnStr = "Stop";
