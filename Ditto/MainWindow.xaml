@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ditto"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525"
+        Icon="Resources/Main.ico">
     <Grid>
         <Button x:Name="startStopBtn" Content="Start" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0, 0, 0, 20" Height ="50" Width="200" Click="startStopBtn_Click"/>
         <TextBox x:Name="textBox" HorizontalAlignment="Center" Height="20" Margin="150,50,0,0" TextWrapping="NoWrap" Text="TextBox" VerticalAlignment="Top" Width="239" TextChanged="textBox_TextChanged"/>

@@ -43,7 +43,7 @@ namespace Ditto
 
             // Initialize tray icon
             NotifyIcon trayIcon = new NotifyIcon();
-            trayIcon.Icon = new System.Drawing.Icon(iconPath);
+            trayIcon.Icon = Properties.Resources.Main;
             trayIcon.Visible = true;
             trayIcon.DoubleClick +=
                 delegate(object sender, EventArgs args)
@@ -176,6 +176,6 @@ namespace Ditto
 
         private static String startBtnStr = "Start";
         private static String stopBtnStr = "Stop";
-        private static String iconPath = "Main.ico";
+        private static String iconPath = "Ditto;component/Main.ico";
     }
 }
